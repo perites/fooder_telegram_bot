@@ -43,12 +43,12 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(job.chat_id, text=menu_for_today)
     await context.bot.send_message(job.chat_id, text=ingr_for_today)
 
-    if answer["deliverys"]["lunch_delivery"]:
+    if answer["deliverys"].get("lunch_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['lunch_delivery']['link']}'>{answer['deliverys']['lunch_delivery']['delivery_name']}</a>"
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
         context.job_queue.run_once(send_message_my, 1, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
-    if answer["deliverys"]["dinner_delivery"]:
+    if answer["deliverys"].get("dinner_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['dinner_delivery']['link']}'>{answer['deliverys']['dinner_delivery']['delivery_name']}</a>"
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
         context.job_queue.run_once(send_message_my, 2, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
