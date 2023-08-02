@@ -45,26 +45,26 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
 
     if answer["deliverys"]["lunch_delivery"]:
         data = f"Замовити з <a href='{answer['deliverys']['lunch_delivery']['link']}'>{answer['deliverys']['lunch_delivery']['delivery_name']}</a>"
-        context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        # context.job_queue.run_once(send_message_my, 1, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, 1, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
     if answer["deliverys"]["dinner_delivery"]:
         data = f"Замовити з <a href='{answer['deliverys']['dinner_delivery']['link']}'>{answer['deliverys']['dinner_delivery']['delivery_name']}</a>"
-        context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        # context.job_queue.run_once(send_message_my, 2, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
+        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, 2, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
 
     if answer["weekday"] in ["Monday", "Friday", "Wednesday"]:
         data = "Нагадування готувати вечерю!"
-        context.job_queue.run_once(send_message_my, datetime.datetime(hour=12), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
-        context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
+        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=12), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
+        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
 
-        # context.job_queue.run_once(send_message_my, 4, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
-        # context.job_queue.run_once(send_message_my, 5, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
+        context.job_queue.run_once(send_message_my, 4, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
+        context.job_queue.run_once(send_message_my, 5, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
 
     elif answer["weekday"] in ["Tuesday", "Thursday"]:
         data = "Нагадування приготувати обід!"
-        context.job_queue.run_once(send_message_my, datetime.datetime(hour=9, minute=30), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        # context.job_queue.run_once(send_message_my, 3, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook lunch")  # hour -2
+        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=9, minute=30), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, 3, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook lunch")  # hour -2
 
 
 async def send_message_my(context: ContextTypes.DEFAULT_TYPE):
