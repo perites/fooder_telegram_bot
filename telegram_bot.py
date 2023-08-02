@@ -30,7 +30,7 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def general_menu(context: ContextTypes.DEFAULT_TYPE):
     job = context.job
-    responce = requests.get("http://127.0.0.1:5000/api/")
+    responce = requests.get("https://fooder.onrender.com/api/")
     answer = responce.json()
 
     if responce.status_code != 200:
@@ -43,12 +43,12 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(job.chat_id, text=menu_for_today)
     await context.bot.send_message(job.chat_id, text=ingr_for_today)
 
-    if answer["deliverys"]["lunch_delivery"]:
+    if answer["deliverys"].get("lunch_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['lunch_delivery']['link']}'>{answer['deliverys']['lunch_delivery']['delivery_name']}</a>"
         context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
         # context.job_queue.run_once(send_message_my, 1, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
-    if answer["deliverys"]["dinner_delivery"]:
+    if answer["deliverys"].get("dinner_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['dinner_delivery']['link']}'>{answer['deliverys']['dinner_delivery']['delivery_name']}</a>"
         context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
         # context.job_queue.run_once(send_message_my, 2, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
@@ -72,7 +72,7 @@ async def send_message_my(context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(job.chat_id, text=job.data, parse_mode=ParseMode.HTML)
 
 
-def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE) -> bool:
+def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE):
     current_jobs = context.job_queue.get_jobs_by_name(name)
     if not current_jobs:
         return False
