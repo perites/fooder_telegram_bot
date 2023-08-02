@@ -24,8 +24,8 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text += " Old one was removed "
         await update.effective_message.reply_text(text)
 
-    except Exception:
-        await update.effective_message.reply_text("Something went wrong")
+    except Exception as e:
+        await update.effective_message.reply_text(f"Something went wrong  : {e}")
 
 
 async def general_menu(context: ContextTypes.DEFAULT_TYPE):
