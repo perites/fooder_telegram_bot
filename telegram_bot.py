@@ -30,7 +30,7 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def general_menu(context: ContextTypes.DEFAULT_TYPE):
     job = context.job
-    responce = requests.get("http://127.0.0.1:5000/api/")
+    responce = requests.get("https://fooder.onrender.com/api/")
     answer = responce.json()
 
     if responce.status_code != 200:
