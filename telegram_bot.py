@@ -16,8 +16,8 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         job_removed = remove_job_if_exists(str(chat_id), context)
-        context.job_queue.run_daily(general_menu, datetime.time(hour=8), chat_id=chat_id, name=str(chat_id))  # hour -2
-        # context.job_queue.run_once(general_menu, 1, chat_id=chat_id, name=str(chat_id))  # hour -2
+        # context.job_queue.run_daily(general_menu, datetime.time(hour=8), chat_id=chat_id, name=str(chat_id))  # hour -2
+        context.job_queue.run_once(general_menu, 1, chat_id=chat_id, name=str(chat_id))  # hour -2
 
         text = "You will get notifications "
         if job_removed:
