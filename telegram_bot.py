@@ -15,13 +15,18 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_message.chat_id
 
     try:
-        job_removed = remove_job_if_exists(str(chat_id), context)
-        # context.job_queue.run_daily(general_menu, datetime.time(hour=8), chat_id=chat_id, name=str(chat_id))  # hour -2
-        context.job_queue.run_once(general_menu, 1, chat_id=chat_id, name=str(chat_id))  # hour -2
+        job_removed = {}
+
+        for name in ["cook dinner2", "cook dinner1", "dinner_delivery", "lunch_delivery", "ingr_for_today", "menu_for_today"]:
+            job_removed[f"{str(chat_id)} {name}"] = remove_job_if_exists(f"{str(chat_id)} {name}", context)
+
+        job_removed[f"{str(chat_id)}"] = remove_job_if_exists(f"{str(chat_id)}", context)
+        context.job_queue.run_once(general_menu, 1, chat_id=chat_id, name=str(chat_id))
 
         text = "You will get notifications "
-        if job_removed:
-            text += " Old one was removed "
+        if True in job_removed.values():
+            text += f" Old one was removed \n{job_removed}"
+
         await update.effective_message.reply_text(text)
 
     except Exception as e:
@@ -40,31 +45,35 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
     menu_for_today = f"Сьогодні на обід : {', '.join(answer['lunch'])} \nСьогодні на вечерю : {', '.join(answer['dinner'])}"
     ingr_for_today = "\n".join([f"{ingr['name']} --- {ingr['amount']}" for ingr in answer['ingredients']])
     ingr_for_today = f"Сьогодні знадобиться : \n{ingr_for_today}"
-    await context.bot.send_message(job.chat_id, text=menu_for_today)
-    await context.bot.send_message(job.chat_id, text=ingr_for_today)
+
+    # context.job_queue.run_once(send_message_my, datetime.time(hour=8), data=menu_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} menu_for_today")  # hour -2
+    # context.job_queue.run_once(send_message_my, datetime.time(hour=8), data=ingr_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} ingr_for_today")  # hour -2
+
+    context.job_queue.run_once(send_message_my, 1, data=menu_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} menu_for_today")  # hour -2
+    context.job_queue.run_once(send_message_my, 2, data=ingr_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} ingr_for_today")  # hour -2
 
     if answer["deliverys"].get("lunch_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['lunch_delivery']['link']}'>{answer['deliverys']['lunch_delivery']['delivery_name']}</a>"
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        context.job_queue.run_once(send_message_my, 1, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, 3, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
     if answer["deliverys"].get("dinner_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['dinner_delivery']['link']}'>{answer['deliverys']['dinner_delivery']['delivery_name']}</a>"
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        context.job_queue.run_once(send_message_my, 2, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, 4, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
 
     if answer["weekday"] in ["Monday", "Friday", "Wednesday"]:
         data = "Нагадування готувати вечерю!"
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=12), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
 
-        context.job_queue.run_once(send_message_my, 4, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
-        context.job_queue.run_once(send_message_my, 5, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
+        context.job_queue.run_once(send_message_my, 5, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
+        context.job_queue.run_once(send_message_my, 6, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
 
     elif answer["weekday"] in ["Tuesday", "Thursday"]:
         data = "Нагадування приготувати обід!"
         # context.job_queue.run_once(send_message_my, datetime.datetime(hour=9, minute=30), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        context.job_queue.run_once(send_message_my, 3, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook lunch")  # hour -2
+        context.job_queue.run_once(send_message_my, 7, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook lunch")  # hour -2
 
 
 async def send_message_my(context: ContextTypes.DEFAULT_TYPE):
