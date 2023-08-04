@@ -51,20 +51,20 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
 
     if answer["deliverys"].get("lunch_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['lunch_delivery']['link']}'>{answer['deliverys']['lunch_delivery']['delivery_name']}</a>"
-        context.job_queue.run_once(send_message_my, datetime.time(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.time(hour=10), data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
     if answer["deliverys"].get("dinner_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['dinner_delivery']['link']}'>{answer['deliverys']['dinner_delivery']['delivery_name']}</a>"
-        context.job_queue.run_once(send_message_my, datetime.time(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.time(hour=15), data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
     if answer["weekday"] in ["Monday", "Friday", "Wednesday"]:
         data = "Нагадування готувати вечерю!"
-        context.job_queue.run_once(send_message_my, datetime.time(hour=12), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
-        context.job_queue.run_once(send_message_my, datetime.time(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.time(hour=12), data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.time(hour=15), data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
 
     elif answer["weekday"] in ["Tuesday", "Thursday"]:
         data = "Нагадування приготувати обід!"
-        context.job_queue.run_once(send_message_my, datetime.time(hour=9, minute=30), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.time(hour=9, minute=30), data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
 
 async def send_message_my(context: ContextTypes.DEFAULT_TYPE):
