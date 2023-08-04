@@ -45,30 +45,22 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
     menu_for_today = f"Сьогодні на обід : {', '.join(answer['lunch'])} \nСьогодні на вечерю : {', '.join(answer['dinner'])}"
     ingr_for_today = "\n".join([f"{ingr['name']} --- {ingr['amount']}" for ingr in answer['ingredients']])
     ingr_for_today = f"Сьогодні знадобиться : \n{ingr_for_today}"
-    
-    # context.job_queue.run_once(send_message_my, datetime.time(hour=8), data=menu_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} menu_for_today")  # hour -2
-    # context.job_queue.run_once(send_message_my, datetime.time(hour=8), data=ingr_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} ingr_for_today")  # hour -2
 
-    context.job_queue.run_once(send_message_my, 1, data=menu_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} menu_for_today")  # hour -2
-    context.job_queue.run_once(send_message_my, 2, data=ingr_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} ingr_for_today")  # hour -2
-    
+    context.job_queue.run_once(send_message_my, datetime.time(hour=8), data=menu_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} menu_for_today")  # hour -2
+    context.job_queue.run_once(send_message_my, datetime.time(hour=8), data=ingr_for_today, chat_id=job.chat_id, name=f"{str(job.chat_id)} ingr_for_today")  # hour -2
+
     if answer["deliverys"].get("lunch_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['lunch_delivery']['link']}'>{answer['deliverys']['lunch_delivery']['delivery_name']}</a>"
-        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        context.job_queue.run_once(send_message_my, 3, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.datetime(hour=10), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
     if answer["deliverys"].get("dinner_delivery"):
         data = f"Замовити з <a href='{answer['deliverys']['dinner_delivery']['link']}'>{answer['deliverys']['dinner_delivery']['delivery_name']}</a>"
-        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
-        context.job_queue.run_once(send_message_my, 4, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} dinner_delivery")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} lunch_delivery")  # hour -2
 
     if answer["weekday"] in ["Monday", "Friday", "Wednesday"]:
         data = "Нагадування готувати вечерю!"
-        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=12), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
-        # context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
-
-        context.job_queue.run_once(send_message_my, 5, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
-        context.job_queue.run_once(send_message_my, 6, data=data, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.datetime(hour=12), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner1")  # hour -2
+        context.job_queue.run_once(send_message_my, datetime.datetime(hour=15), data=data, parse_mode=ParseMode.HTML, chat_id=job.chat_id, name=f"{str(job.chat_id)} cook dinner2")  # hour -2
 
     elif answer["weekday"] in ["Tuesday", "Thursday"]:
         data = "Нагадування приготувати обід!"
