@@ -21,7 +21,7 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
             job_removed[f"{str(chat_id)} {name}"] = remove_job_if_exists(f"{str(chat_id)} {name}", context)
 
         job_removed[f"{str(chat_id)}"] = remove_job_if_exists(f"{str(chat_id)}", context)
-        context.job_queue.run_once(general_menu, 1, chat_id=chat_id, name=str(chat_id))
+        context.job_queue.run_daily(general_menu, datetime.time(hour=7, minute=30), chat_id=chat_id, name=str(chat_id))
 
         text = "You will get notifications "
         if True in job_removed.values():
@@ -40,6 +40,9 @@ async def general_menu(context: ContextTypes.DEFAULT_TYPE):
 
     if responce.status_code != 200:
         await context.bot.send_message(job.chat_id, text=f"bad api responce: {answer}")
+        return
+
+    if answer["weekday"] in ["Saturday", "Sunday"]:
         return
 
     menu_for_today = f"Сьогодні на обід : {', '.join(answer['lunch'])} \nСьогодні на вечерю : {', '.join(answer['dinner'])}"
