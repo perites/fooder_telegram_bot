@@ -17,26 +17,26 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_message.chat_id
 
-    # try:
-    job_removed = {}
+    try:
+        job_removed = {}
 
-    for name in ["cook dinner2", "cook dinner1", "dinner_delivery", "lunch_delivery", "ingr_for_today", "menu_for_today", "reminder"]:
-        job_removed[f"{str(chat_id)} {name}"] = remove_job_if_exists(f"{str(chat_id)} {name}", context)
+        for name in ["cook dinner2", "cook dinner1", "dinner_delivery", "lunch_delivery", "ingr_for_today", "menu_for_today", "reminder"]:
+            job_removed[f"{str(chat_id)} {name}"] = remove_job_if_exists(f"{str(chat_id)} {name}", context)
 
-    job_removed[f"{str(chat_id)}"] = remove_job_if_exists(f"{str(chat_id)}", context)
-    context.job_queue.run_daily(general_menu, datetime.time(hour=7, minute=30), chat_id=chat_id, name=str(chat_id))
-    context.job_queue.run_daily(send_message_my, datetime.time(hour=14, minute=30),
-                                days=(6,), chat_id=chat_id, name=f"{str(chat_id)} reminder",
-                                data="Нагадування зробити меню")
+        job_removed[f"{str(chat_id)}"] = remove_job_if_exists(f"{str(chat_id)}", context)
+        context.job_queue.run_daily(general_menu, datetime.time(hour=7, minute=30), chat_id=chat_id, name=str(chat_id))
+        context.job_queue.run_daily(send_message_my, datetime.time(hour=14, minute=30),
+                                    days=(6,), chat_id=chat_id, name=f"{str(chat_id)} reminder",
+                                    data="Нагадування зробити меню")
 
-    text = "You will get notifications "
-    if True in job_removed.values():
-        text += f" Old one was removed \n{job_removed}"
+        text = "You will get notifications "
+        if True in job_removed.values():
+            text += f" Old one was removed \n{job_removed}"
 
-    await update.effective_message.reply_text(text)
+        await update.effective_message.reply_text(text)
 
-    # except Exception as e:
-    #     await update.effective_message.reply_text(f"Something went wrong  : {e}")
+    except Exception as e:
+        await update.effective_message.reply_text(f"Something went wrong  : {e}")
 
 
 async def general_menu(context: ContextTypes.DEFAULT_TYPE):
