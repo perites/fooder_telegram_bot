@@ -4,7 +4,10 @@ import requests
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from confg import bot_token
+
+list_with_items = []
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -17,11 +20,14 @@ async def notifications(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         job_removed = {}
 
-        for name in ["cook dinner2", "cook dinner1", "dinner_delivery", "lunch_delivery", "ingr_for_today", "menu_for_today"]:
+        for name in ["cook dinner2", "cook dinner1", "dinner_delivery", "lunch_delivery", "ingr_for_today", "menu_for_today", "reminder"]:
             job_removed[f"{str(chat_id)} {name}"] = remove_job_if_exists(f"{str(chat_id)} {name}", context)
 
         job_removed[f"{str(chat_id)}"] = remove_job_if_exists(f"{str(chat_id)}", context)
         context.job_queue.run_daily(general_menu, datetime.time(hour=7, minute=30), chat_id=chat_id, name=str(chat_id))
+        context.job_queue.run_daily(send_message_my, datetime.time(hour=14, minute=30),
+                                    days=(5), chat_id=chat_id, name=f"{str(chat_id)} reminder",
+                                    data="Нагадування зробити меню")
 
         text = "You will get notifications "
         if True in job_removed.values():
@@ -84,11 +90,33 @@ def remove_job_if_exists(name: str, context: ContextTypes.DEFAULT_TYPE):
     return True
 
 
+async def my_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_message.chat_id
+    items = " ".join(context.args)
+    if not items:
+        try:
+            await context.bot.send_message(chat_id, text="\n".join(list_with_items))
+        except BadRequest:
+            await context.bot.send_message(chat_id, text="Список наразі пустий")
+        return
+
+    list_with_items.append(items)
+    await context.bot.send_message(chat_id, text=f"{items} було додано до списку")
+
+
+async def clear_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_message.chat_id
+    list_with_items.clear()
+    await context.bot.send_message(chat_id, text="Список був очищений")
+
+
 def main():
     application = Application.builder().token(bot_token).build()
 
     application.add_handler(CommandHandler(["start", "help"], start))
     application.add_handler(CommandHandler("notifications", notifications))
+    application.add_handler(CommandHandler("list", my_list))
+    application.add_handler(CommandHandler("clear", clear_list))
 
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
